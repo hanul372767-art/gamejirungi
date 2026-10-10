@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>지렁이 영양소 탐험 | 중학교 영양 학습 게임</title>
+  <meta name="description" content="중학교 기술·가정 식생활과 영양 수업용 게임. 목표 영양소가 함유된 올바른 식품을 찾아 지렁이를 키우고 10대 영양소를 마스터하세요!">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- 1. 상단 타이틀 & 메뉴 바 -->
+  <header class="game-header">
+    <div class="logo-group">
+      <span class="logo-icon">🐛</span>
+      <div class="title-wrap">
+        <h1>지렁이 영양소 탐험</h1>
+        <p>중학교 기술·가정 식생활과 영양 학습 게임</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="header-speed-wrap">
+        <label for="headerSpeedSelect" class="header-speed-label">⚡ 속도:</label>
+        <select id="headerSpeedSelect" class="form-select-sm" title="게임 속도 즉시 조절">
+          <option value="320">🐌 아주 느림</option>
+          <option value="250" selected>🌱 느림 (추천)</option>
+          <option value="190">🌿 보통</option>
+          <option value="140">⚡ 빠름</option>
+        </select>
+      </div>
+      <button id="btnEncyclopedia" class="btn-header" title="10대 영양소와 식품 목록 보기">
+        📖 영양 도감
+      </button>
+      <button id="btnMuteToggle" class="btn-header" title="배경음 및 효과음 켜기/끄기">
+        🔊 사운드 ON
+      </button>
+    </div>
+  </header>
+
+  <!-- 2. 목표 영양소 퀘스트 배너 (HUD 핵심) -->
+  <section class="quest-banner" aria-label="현재 영양소 미션">
+    <div class="quest-top">
+      <div class="target-info">
+        <span class="target-desc">현재 찾아야 할 목표 영양소:</span>
+        <div id="targetNutrientBadge" class="target-badge">
+          <span id="targetNutrientIcon">🌾</span>
+          <span id="targetNutrientName">탄수화물</span>
+        </div>
+      </div>
+      <div class="target-progress-wrap">
+        <span class="progress-label">섭취 미션:</span>
+        <span id="targetProgressText" class="progress-count">0 / 3</span>
+      </div>
+    </div>
+    <div class="target-desc" id="targetNutrientDesc">
+      우리 몸의 주된 에너지원! 두뇌 활동에 필수적이에요 (4kcal/g)
+    </div>
+    <div class="progress-bar-bg">
+      <div id="targetProgressBar" class="progress-bar-fill"></div>
+    </div>
+  </section>
+
+  <!-- 3. 메인 게임 영역 -->
+  <main class="game-container">
+    <!-- 인게임 정보 바 -->
+    <div class="hud-bar">
+      <div class="hud-item">
+        <span class="hud-label">점수</span>
+        <span id="hudScore" class="hud-score-value">0</span>
+      </div>
+      <div id="hudCombo" class="hud-item hidden">
+        <span id="hudComboText" class="combo-badge">2 콤보! 🔥</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">체력</span>
+        <div id="hudLives" class="lives-container">
+          <!-- JS에서 하트 동적 생성 -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 캔버스 및 토스트 알림판 -->
+    <div class="canvas-wrapper">
+      <canvas id="gameCanvas"></canvas>
+
+      <!-- 실시간 학습 피드백 토스트 -->
+      <aside id="gameToast" class="game-toast" role="alert">
+        <span id="toastIcon">💡</span>
+        <span id="toastMsg">식품을 섭취해 보세요!</span>
+      </aside>
+    </div>
+
+    <!-- 터치 스크린용 온스크린 가상 D-Pad (스마트보드/태블릿 지원) -->
+    <nav class="touch-controls" aria-label="터치 방향키 조작">
+      <div class="dpad-row">
+        <button id="btnUp" class="dpad-btn" aria-label="위쪽 이동">⬆️</button>
+      </div>
+      <div class="dpad-row">
+        <button id="btnLeft" class="dpad-btn" aria-label="왼쪽 이동">⬅️</button>
+        <button id="btnDown" class="dpad-btn" aria-label="아래쪽 이동">⬇️</button>
+        <button id="btnRight" class="dpad-btn" aria-label="오른쪽 이동">➡️</button>
+      </div>
+    </nav>
+  </main>
+
+  <!-- ==================== 모달 레이어 ==================== -->
+
+  <!-- [시작 모달] -->
+  <div id="startModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-icon-badge">🍎🐛</div>
+      <h2 class="modal-title">지렁이 영양소 탐험</h2>
+      <p class="modal-subtitle">
+        지렁이를 조작하여 화면 상단에 제시된 <strong>목표 영양소</strong>가 함유된 식품을 먹어보세요!<br>
+        올바른 식품을 먹으면 지렁이가 자라고 점수를 얻지만,<br>
+        영양소에 맞지 않는 음식을 먹으면 체력이 줄어들어요!
+      </p>
+
+      <div class="form-group">
+        <label for="selectMode">🎯 학습 모드 선택</label>
+        <select id="selectMode" class="form-select">
+          <option value="ALL">✨ 전체 10대 영양소 순차 정복 모드</option>
+          <option value="carbohydrate">🌾 1. 탄수화물 집중 모드</option>
+          <option value="protein">🥩 2. 단백질 집중 모드</option>
+          <option value="fat">🧈 3. 지방 집중 모드</option>
+          <option value="vitaminA">🥕 4. 비타민 A 집중 모드</option>
+          <option value="vitaminB">🥚 5. 비타민 B 집중 모드</option>
+          <option value="vitaminC">🍊 6. 비타민 C 집중 모드</option>
+          <option value="vitaminD">🍄 7. 비타민 D 집중 모드</option>
+          <option value="calcium">🦴 8. 칼슘 집중 모드</option>
+          <option value="iron">🩸 9. 철(철분) 집중 모드</option>
+          <option value="sodium">🧂 10. 나트륨 집중 모드</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="selectSpeed">⚡ 이동 속도 (난이도)</label>
+        <select id="selectSpeed" class="form-select">
+          <option value="320">🐌 아주 느림 (식품 글자 여유롭게 읽기)</option>
+          <option value="250" selected>🌱 느림 (중학교 수업 추천 - 기본값)</option>
+          <option value="190">🌿 보통 (기본 아케이드)</option>
+          <option value="140">⚡ 빠름 (도전 모드)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-checkbox-label">
+          <input type="checkbox" id="checkWallWrap" checked>
+          <span>벽 통과 모드 (교실 수업에서 권장 - 반대편으로 통과)</span>
+        </label>
+      </div>
+
+      <button id="btnStartGame" class="btn-primary">🎮 게임 시작하기</button>
+    </div>
+  </div>
+
+  <!-- [일시정지 모달] -->
+  <div id="pauseModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-icon-badge">⏸️</div>
+      <h2 class="modal-title">게임 일시정지</h2>
+      <p class="modal-subtitle">잠시 숨을 고르고 영양소 지식을 점검해 보세요.</p>
+      <button id="btnResume" class="btn-primary">▶️ 계속 진행하기</button>
+    </div>
+  </div>
+
+  <!-- [결과 모달 (성적표)] -->
+  <div id="resultModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-icon-badge">📊</div>
+      <h2 id="resultTitle" class="modal-title">탐험 결과</h2>
+      <div id="resultBadge" class="result-badge win">🌟 영양 마스터 🌟</div>
+
+      <div class="result-stats-grid">
+        <div class="result-stat-box">
+          <div class="stat-label">최종 점수</div>
+          <div id="resultFinalScore" class="stat-val">0점</div>
+        </div>
+        <div class="result-stat-box">
+          <div class="stat-label">최대 연속 정답</div>
+          <div id="resultMaxCombo" class="stat-val">0회</div>
+        </div>
+        <div class="result-stat-box">
+          <div class="stat-label">맞춘 식품</div>
+          <div id="resultCorrect" class="stat-val">0개</div>
+        </div>
+        <div class="result-stat-box">
+          <div class="stat-label">틀린 식품</div>
+          <div id="resultWrong" class="stat-val">0개</div>
+        </div>
+      </div>
+
+      <div id="resultComment" class="result-comment">
+        학습 결과 피드백이 표시됩니다.
+      </div>
+
+      <button id="btnRestart" class="btn-primary">🔄 다시 도전하기</button>
+    </div>
+  </div>
+
+  <!-- [10대 영양소 도감 모달] -->
+  <div id="encyclopediaModal" class="modal-overlay hidden">
+    <div class="modal-content encyclopedia-modal-content">
+      <div class="encyclopedia-header">
+        <h2>📖 10대 영양소 & 함유 식품 도감</h2>
+        <button id="closeEncyclopedia" class="btn-close" aria-label="닫기">✕</button>
+      </div>
+      <div id="encyclopediaList" class="encyclopedia-list">
+        <!-- JS에서 10가지 영양소 및 식품 목록 동적 렌더링 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 스크립트 모듈 로드 -->
+  <script src="js/data.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/snake.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

@@ -1,0 +1,758 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+
+:root {
+  --primary: #22C55E;
+  --primary-glow: rgba(34, 197, 94, 0.4);
+  --accent: #F59E0B;
+  --accent-glow: rgba(245, 158, 11, 0.4);
+  --danger: #EF4444;
+  --bg-dark: #090D16;
+  --bg-card: rgba(15, 23, 42, 0.75);
+  --border-glass: rgba(255, 255, 255, 0.12);
+  --text-main: #F8FAFC;
+  --text-muted: #94A3B8;
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --shadow-glow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: #FEF08A;
+  background-image: 
+    radial-gradient(at 10% 10%, rgba(253, 224, 71, 0.8) 0px, transparent 55%),
+    radial-gradient(at 90% 90%, rgba(251, 191, 36, 0.6) 0px, transparent 60%),
+    radial-gradient(at 50% 50%, #FEF9C3 0px, transparent 100%);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-x: hidden;
+  padding: 16px;
+}
+
+/* 상단 메인 헤더 */
+.game-header {
+  width: 100%;
+  max-width: 980px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 10px 18px;
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-glow);
+}
+
+.logo-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  font-size: 2.2rem;
+  filter: drop-shadow(0 0 10px var(--primary-glow));
+  animation: wiggle 3s infinite ease-in-out;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(-8deg) scale(1.05); }
+  75% { transform: rotate(8deg) scale(1.05); }
+}
+
+.title-wrap h1 {
+  font-family: 'Jua', sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #4ADE80, #FACC15);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.title-wrap p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-speed-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 4px 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-glass);
+}
+
+.header-speed-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.form-select-sm {
+  background: #0F172A;
+  border: 1px solid var(--border-glass);
+  color: #38BDF8;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  outline: none;
+  font-family: inherit;
+}
+
+.form-select-sm:focus {
+  border-color: #22C55E;
+}
+
+.btn-header {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-glass);
+  color: var(--text-main);
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-header:hover {
+  background: rgba(255, 255, 255, 0.16);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-header.muted {
+  opacity: 0.6;
+}
+
+/* 목표 영양소 퀘스트 배너 (HUD 핵심) */
+.quest-banner {
+  width: 100%;
+  max-width: 980px;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.9));
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 12px 20px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.quest-banner::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #F59E0B, #10B981, #3B82F6);
+}
+
+.quest-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.target-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.target-badge {
+  font-family: 'Jua', sans-serif;
+  font-size: 1.15rem;
+  padding: 4px 14px;
+  border-radius: 20px;
+  color: #FFFFFF;
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.4s ease;
+}
+
+.target-desc {
+  font-size: 0.88rem;
+  color: #E2E8F0;
+}
+
+.target-progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.progress-count {
+  font-family: 'Jua', sans-serif;
+  font-size: 1.25rem;
+  color: #FBBF24;
+}
+
+.progress-bar-bg {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #10B981, #FBBF24);
+  border-radius: 4px;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+}
+
+/* 인게임 레이아웃 (캔버스 및 사이드 통계) */
+.game-container {
+  width: 100%;
+  max-width: 980px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.hud-bar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 8px 16px;
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+}
+
+.hud-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+.hud-label {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.hud-score-value {
+  font-family: 'Jua', sans-serif;
+  font-size: 1.5rem;
+  color: #38BDF8;
+  letter-spacing: 0.5px;
+}
+
+.lives-container {
+  display: flex;
+  gap: 4px;
+}
+
+.heart-icon {
+  font-size: 1.3rem;
+  transition: transform 0.2s ease;
+}
+
+.heart-icon.active {
+  filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.6));
+  animation: pulse-heart 2s infinite ease-in-out;
+}
+
+.heart-icon.empty {
+  opacity: 0.3;
+}
+
+@keyframes pulse-heart {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+
+.combo-badge {
+  background: linear-gradient(135deg, #EF4444, #F59E0B);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-family: 'Jua', sans-serif;
+  font-size: 0.95rem;
+  animation: bounce 0.4s infinite alternate;
+}
+
+@keyframes bounce {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+
+/* 캔버스 래퍼 */
+.canvas-wrapper {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 12px 36px rgba(180, 83, 9, 0.25), 0 0 0 3px #FACC15;
+  background: #FEF08A;
+}
+
+#gameCanvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+}
+
+/* 게임 내 실시간 피드백 토스트 */
+.game-toast {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-30px);
+  background: rgba(15, 23, 42, 0.92);
+  border: 1px solid var(--border-glass);
+  backdrop-filter: blur(8px);
+  padding: 10px 22px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  z-index: 50;
+  max-width: 90%;
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+.game-toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.game-toast.toast-success {
+  border-color: #22C55E;
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+}
+
+.game-toast.toast-error {
+  border-color: #EF4444;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+}
+
+.game-toast.toast-info {
+  border-color: #38BDF8;
+}
+
+/* 터치 가상 방향키 패드 (스마트보드 / 태블릿용) */
+.touch-controls {
+  display: none; /* 모바일/태블릿 화면 또는 터치 기기에서 표시 */
+  margin-top: 14px;
+  gap: 10px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dpad-row {
+  display: flex;
+  gap: 14px;
+}
+
+.dpad-btn {
+  width: 58px;
+  height: 58px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-glass);
+  border-radius: 16px;
+  color: #FFFFFF;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.dpad-btn:active {
+  background: rgba(34, 197, 94, 0.3);
+  transform: scale(0.92);
+}
+
+@media (max-width: 860px), (hover: none) {
+  .touch-controls {
+    display: flex;
+  }
+}
+
+/* 모달 공통 스타일 */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+  transition: opacity 0.3s ease;
+}
+
+.modal-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.modal-content {
+  background: #1E293B;
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  width: 100%;
+  max-width: 540px;
+  padding: 28px;
+  position: relative;
+  text-align: center;
+  animation: modal-pop 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+@keyframes modal-pop {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.modal-icon-badge {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.modal-title {
+  font-family: 'Jua', sans-serif;
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+  color: #F8FAFC;
+}
+
+.modal-subtitle {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* 옵션 폼 컨트롤 */
+.form-group {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  color: #CBD5E1;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.form-select {
+  width: 100%;
+  background: #0F172A;
+  border: 1px solid var(--border-glass);
+  color: #F8FAFC;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  outline: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.form-select:focus {
+  border-color: #22C55E;
+}
+
+.form-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  color: #CBD5E1;
+  cursor: pointer;
+}
+
+.form-checkbox-label input {
+  width: 18px;
+  height: 18px;
+  accent-color: #22C55E;
+  cursor: pointer;
+}
+
+/* 메인 액션 버튼 */
+.btn-primary {
+  width: 100%;
+  background: linear-gradient(135deg, #22C55E, #16A34A);
+  color: #FFFFFF;
+  border: none;
+  padding: 14px 20px;
+  border-radius: var(--radius-md);
+  font-family: 'Jua', sans-serif;
+  font-size: 1.25rem;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.4);
+  transition: all 0.2s ease;
+  margin-top: 10px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(34, 197, 94, 0.6);
+}
+
+.btn-secondary {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-glass);
+  color: #F8FAFC;
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  font-family: 'Jua', sans-serif;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* 결과 모달 전용 스타일 */
+.result-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-family: 'Jua', sans-serif;
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+}
+
+.result-badge.win {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ADE80;
+  border: 1px solid #22C55E;
+}
+
+.result-badge.lose {
+  background: rgba(239, 68, 68, 0.2);
+  color: #F87171;
+  border: 1px solid #EF4444;
+}
+
+.result-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.result-stat-box {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 12px;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.stat-val {
+  font-family: 'Jua', sans-serif;
+  font-size: 1.35rem;
+  color: #F8FAFC;
+}
+
+.result-comment {
+  font-size: 0.92rem;
+  color: #CBD5E1;
+  line-height: 1.6;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  margin-bottom: 18px;
+}
+
+/* 영양소 도감 모달 */
+.encyclopedia-modal-content {
+  max-width: 780px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+}
+
+.encyclopedia-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border-glass);
+  padding-bottom: 12px;
+}
+
+.encyclopedia-header h2 {
+  font-family: 'Jua', sans-serif;
+  font-size: 1.6rem;
+  color: #F8FAFC;
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.8rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.btn-close:hover {
+  color: #FFFFFF;
+}
+
+.encyclopedia-list {
+  overflow-y: auto;
+  padding-right: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+}
+
+.encyclopedia-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-glass);
+  border-left-width: 5px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.enc-header {
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.enc-icon {
+  font-size: 1.8rem;
+}
+
+.enc-title-group h4 {
+  font-family: 'Jua', sans-serif;
+  font-size: 1.15rem;
+  margin-bottom: 2px;
+}
+
+.enc-title-group p {
+  font-size: 0.82rem;
+  color: #CBD5E1;
+}
+
+.enc-body {
+  padding: 12px 14px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.enc-foods-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.enc-foods-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.enc-food-tag {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  color: #E2E8F0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 유틸리티 */
+.hidden {
+  display: none !important;
+}
+
+/* 스크롤바 커스텀 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
